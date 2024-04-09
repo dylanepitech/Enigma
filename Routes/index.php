@@ -1,6 +1,5 @@
 <?php 
 namespace Routes;
-require_once __DIR__ . '/../vendor/autoload.php';
 use Dotenv\Dotenv;
 
     class index{
@@ -27,11 +26,21 @@ use Dotenv\Dotenv;
             foreach ($object as  $value) {
                for ($i=0; $i < count($value) ; $i++) { 
                 if ($value[$i]['method'] == $_SERVER['REQUEST_METHOD'] && $value[$i]['path'] == $URI_PARSE){
-                    $controller = $value[$i]['controller'];
-                    $function = $value[$i]['function'];
-                    if (file_exists("./src/controller/$controller".".php"))
+                    $controllerName = "Controller\\" . $value[$i]['controller'];
+                    $action = $value[$i]['function'];
+                    $controllerFile = 'src/controller/' . $value[$i]['controller'] . ".php";
+                    if (file_exists($controllerFile))
                     {   
-                        echo 'ok';
+                        require_once $controllerFile;
+                        if (class_exists($controllerName))
+                        {   
+                            $controller = new $controllerName();
+                            $controller->$action();
+                        }else{
+                            $error = 'La méthod appeler dans le controller ne correspond pas.';
+                            require_once('./src/view/404.php');
+                            return;
+                        }
                         return;
                     }else{
                         $error = 'La méthod appeler dans le controller ne correspond pas.';
@@ -41,7 +50,6 @@ use Dotenv\Dotenv;
                 }else{
                     $error = "La route demander n'existe pas";
                    require_once('./src/view/404.php');
-                   return;
                 }
              }
             }

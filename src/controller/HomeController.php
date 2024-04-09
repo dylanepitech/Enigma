@@ -4,6 +4,6 @@ class HomeController{
 
     public function view()
     {
-        require_once('../view/Home.php');
+        require_once('src/view/Home.php');
     }
 }

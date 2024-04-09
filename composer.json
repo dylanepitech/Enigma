@@ -3,7 +3,11 @@
     "description": "Package for dotenv.",
     "autoload": {
         "psr-4": {
-            "Nightdev\\Enigma\\": "src/"
+            "Nightdev\\Enigma\\": "./src/",
+            "Model\\": "src/model/",
+            "View\\": ["src/view/", "src/model/"],
+            "Controller\\": "./src/controller/",
+            "Routes\\": "Routes/"
         }
     },
     "authors": [
