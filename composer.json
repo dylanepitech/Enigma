@@ -1,0 +1,17 @@
+{
+    "name": "nightdev/enigma",
+    "description": "Package for dotenv.",
+    "autoload": {
+        "psr-4": {
+            "Nightdev\\Enigma\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nightdev"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
