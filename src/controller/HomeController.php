@@ -1,9 +1,9 @@
 <?php 
 namespace Controller;
-class VendreController{
+class HomeController{
 
     public function view()
     {
-        require_once('src/view/Vendre.php');
+        require_once('src/view/Home.php');
     }
 }

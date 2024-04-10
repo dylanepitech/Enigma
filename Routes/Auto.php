@@ -21,6 +21,10 @@ class Auto{
             $URI_BASE = $_ENV['URL'];
             $URI_PARSE = str_replace("/".$URI_BASE."/","", $URI);
             $URI_LOWER = strtolower($URI_PARSE);
+            if ($URI_LOWER == "")
+            {
+                $URI_LOWER = $_ENV['DEFAULT'];
+            }
             $path_dossier = "./src/controller";
             $fichier = scandir($path_dossier);
             foreach ($fichier as $value) {
