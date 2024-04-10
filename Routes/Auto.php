@@ -42,7 +42,9 @@ class Auto{
                 $new_controller =  new $controller_name_namespace();
                 $new_controller->view();
             }else{
-                var_dump('Non disponible');
+                $error = 'La route ne corrrespond à aucune connue..';
+                require_once('./src/view/404.php');
+                return;
             }
            
                 
