@@ -7,7 +7,6 @@ try {
     $dotenv->load();
     
     $test = $_ENV['ROUTER_AUTO'];
-    var_dump($test);
 
 } catch (\Throwable $e) {
     echo "Error: " . $e->getMessage();
@@ -18,5 +17,5 @@ if ($test == 'false')
     require_once __DIR__ . '/Routes/web.php';
 
 }else {
-    var_dump('Coucou');
+    require_once __DIR__. '/Routes/Auto.php';
 }
