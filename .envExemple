@@ -1,0 +1,21 @@
+# Url of your APP
+
+URL=Enigma
+
+# in default the routeur is statique you can define in web, put tru for switch at dynamique.
+
+ROUTER_AUTO=false
+
+# Only in dynamique routeur you homepage or indexpage need adjustement, default is home for HomeController if you want to switch to index need to put DEFAULT=index
+
+DEFAULT=home
+
+# DEFAULT=index
+
+# Info connection for bdd
+
+DB_HOST=localhost
+DB_NAME=symfony
+DB_USERNAME=root
+DB_PASSWORD=
+DB_PORT=3306
