@@ -15,7 +15,7 @@ DEFAULT=home
 # Info connection for bdd
 
 DB_HOST=localhost
-DB_NAME=symfony
-DB_USERNAME=root
+DB_NAME=Enigma #Enigma is Default Database.
+DB_USERNAME=
 DB_PASSWORD=
 DB_PORT=3306

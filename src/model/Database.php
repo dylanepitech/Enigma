@@ -7,7 +7,7 @@ use PDOException;
 use Exception;
 use mysqli;
 
-class Database
+abstract class Database
 {
     private $host;
     private $dbname;
@@ -27,7 +27,6 @@ class Database
         $this->password = $_ENV['DB_PASSWORD'];
         $this->port = $_ENV['DB_PORT'];
         $this->TEST_CONNECTION();
-        // $this->connect();
     }
     protected function TEST_CONNECTION()
     {
@@ -36,7 +35,8 @@ class Database
 
             if ($this->conn)
             {
-                $this->CREATE_TABLE();
+                $this->CREATE_DATABASE();
+                echo "Information de la base de donnée correct.";
             }
         }catch (PDOException $e)
         {
@@ -44,17 +44,18 @@ class Database
         }
     }
 
-    protected function CREATE_TABLE()
+    protected function CREATE_DATABASE()
     {
         if ($this->conn) {
         $sql = "CREATE DATABASE Enigma";
         if ($this->conn->query($sql) == true) {
             $this->CONNECT();
+            echo 'Base de donnée Enigma Créé.';
         } else {
-            var_dump('Error creating database: ');
+            var_dump('Erreur de connection à la base de donnée');
         }
     } else {
-        var_dump('Error establishing database connection.');
+        var_dump("Impossible d'établir une connection avec la base de donnée");
     }
     
     }
@@ -68,11 +69,48 @@ class Database
                 $this->password
             );
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->INSERT_TABLE();
         } catch (PDOException $e) {
             throw new Exception("Erreur de connexion à la base de donnée: " . $e->getMessage());
         }
     }
 
-}
+    protected function INSERT_TABLE()
+    {
+        $User = "CREATE TABLE user (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            firstname VARCHAR(255),
+            lastname VARCHAR(255),
+            pseudo VARCHAR(255),
+            email VARCHAR(255) UNIQUE,
+            phone VARCHAR(20),
+            birthdate DATE,
+            postcode VARCHAR(10),
+            zipcode VARCHAR(10),
+            password VARCHAR(255),
+            secret_code VARCHAR(50),
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
 
-$test = new Database();
+        $Token = 'CREATE TABLE token (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            id_user INT,
+            FOREIGN KEY (id_user) REFERENCES user(id)';
+
+            try {
+               $statement = $this->conn->prepare($User);
+               $statement->execute();
+               
+            }catch(PDOException){
+                var_dump("Erreur l'or de la création de la table user");
+            }
+
+            try {
+                $statement = $this->conn->prepare($Token);
+                $statement->execute();
+                
+             }catch(PDOException){
+                 var_dump("Erreur l'or de la création de la table user");
+             }
+        
+    }
+};
