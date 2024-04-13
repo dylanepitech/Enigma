@@ -9,7 +9,7 @@ use PDO;
 use PDOException;
 use Exception;
 
-class Database
+ abstract class Database
 {
     private $host;
     private $dbname;
@@ -112,5 +112,3 @@ class Database
         }
     }
 }
-
-$test = new Database();
