@@ -4,10 +4,11 @@
     "autoload": {
         "psr-4": {
             "Nightdev\\Enigma\\": "./src/",
-            "Model\\": "src/model/",
-            "View\\": ["src/view/", "src/model/"],
+            "Model\\": "./src/model/",
+            "View\\": ["./src/view/", "./src/model/"],
             "Controller\\": "./src/controller/",
-            "Routes\\": "Routes/"
+            "Routes\\": "./Routes/",
+            "Entity\\": "./src/Entity/"
         }
     },
     "authors": [

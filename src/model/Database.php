@@ -16,7 +16,7 @@ use Exception;
     private $username;
     private $password;
     private $port;
-    private $conn;
+    protected $conn;
 
     public function __construct()
     {
@@ -68,47 +68,46 @@ use Exception;
                 $this->password
             );
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->insertTables();
         } catch (PDOException $e) {
             throw new Exception("Erreur de connexion à la base de données: " . $e->getMessage());
         }
     }
 
-    protected function insertTables()
-    {
-        $userQuery = "CREATE TABLE IF NOT EXISTS user (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            firstname VARCHAR(255),
-            lastname VARCHAR(255),
-            pseudo VARCHAR(255),
-            email VARCHAR(255) UNIQUE,
-            phone VARCHAR(20),
-            birthdate DATE,
-            postcode VARCHAR(10),
-            zipcode VARCHAR(10),
-            password VARCHAR(255),
-            secret_code VARCHAR(50),
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )";
+    // protected function insertTables()
+    // {
+    //     $userQuery = "CREATE TABLE IF NOT EXISTS user (
+    //         id INT AUTO_INCREMENT PRIMARY KEY,
+    //         firstname VARCHAR(255),
+    //         lastname VARCHAR(255),
+    //         pseudo VARCHAR(255),
+    //         email VARCHAR(255) UNIQUE,
+    //         phone VARCHAR(20),
+    //         birthdate DATE,
+    //         postcode VARCHAR(10),
+    //         zipcode VARCHAR(10),
+    //         password VARCHAR(255),
+    //         secret_code VARCHAR(50),
+    //         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    //     )";
 
-        $tokenQuery = "CREATE TABLE IF NOT EXISTS token (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            id_user INT,
-            FOREIGN KEY (id_user) REFERENCES user(id)
-        )";
+    //     $tokenQuery = "CREATE TABLE IF NOT EXISTS token (
+    //         id INT AUTO_INCREMENT PRIMARY KEY,
+    //         id_user INT,
+    //         FOREIGN KEY (id_user) REFERENCES user(id)
+    //     )";
 
-        try {
-            $this->conn->exec($userQuery);
-            echo "Table user créée";
-        } catch (PDOException $e) {
-            var_dump("Erreur lors de la création de la table user : " . $e->getMessage());
-        }
+    //     try {
+    //         $this->conn->exec($userQuery);
+    //         echo "Table user créée";
+    //     } catch (PDOException $e) {
+    //         var_dump("Erreur lors de la création de la table user : " . $e->getMessage());
+    //     }
 
-        try {
-            $this->conn->exec($tokenQuery);
-            echo "Table token créée";
-        } catch (PDOException $e) {
-            var_dump("Erreur lors de la création de la table token : " . $e->getMessage());
-        }
-    }
+    //     try {
+    //         $this->conn->exec($tokenQuery);
+    //         echo "Table token créée";
+    //     } catch (PDOException $e) {
+    //         var_dump("Erreur lors de la création de la table token : " . $e->getMessage());
+    //     }
+    // }
 }

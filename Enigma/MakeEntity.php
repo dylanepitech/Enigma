@@ -138,7 +138,7 @@ class MakeEntity{
         var_dump($this->table_name, $this->col_name, $this->type_name, $this->nullable, $this->value);
 
         $file = fopen("./src/Entity/$this->table_name".".php", 'w+');
-        fwrite($file, "<?php \n namespace Entity; \n class $this->table_name{ \n\n\t public function GET_SQL(){\n\t \$sql='CREATE TABLE IF NOT EXIST $this->table_name ( ");
+        fwrite($file, "<?php \n namespace Entity; \n use Model\Database;\n require_once './src/model/Database.php';\n class $this->table_name extends Database{ \n\n\t public function GET_SQL(){\n\t \$sql='CREATE TABLE IF NOT EXISTS $this->table_name ( ");
             fwrite($file, "\n\t\t id INT AUTO_INCREMENT PRIMARY KEY");
             foreach ($this->col_name as $key => $value) {
                 $unique = $this->unique[$key];
@@ -164,7 +164,14 @@ class MakeEntity{
                     fwrite($file,"\n\t\t$value ".strtoupper($this->type_name[$key])." $unique $nullable , " );
                 }
             }
-            fwrite($file, "\n\t\t created_at INT AUTO_INCREMENT PRIMARY KEY)';\n\t}");
+            fwrite($file, "\n\t\t created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)';");
+            fwrite($file, "\n\t \$statement = \$this->conn->prepare(\$sql);");
+            fwrite($file, "\$statement->execute();");
+            fwrite($file, "\n\t}");
+            fwrite($file, "\n}\n");
+            fwrite($file, "\$run = new $this->table_name();\n");
+            fwrite($file, "\$run->GET_SQL();\n");
+            fclose($file);
     }
 
 }
