@@ -9,6 +9,7 @@ class MakeEntity{
     private $type_name = [];
     private $value =[];
     private $nullable =[];
+    private $unique = [];
 
     public function __construct() {
 
@@ -18,7 +19,7 @@ class MakeEntity{
     protected function GET_TABLE_NAME()
     {  
         @system('clear');
-        echo " \n \t \t \033[31m/!\ POUR CHAQUE TABLE l'ID SERAS AUTOMATIQUEMENT CRÉÉ /!\\033[0m \n \n";
+        echo " \n \t \t \033[31m/!\ POUR CHAQUE TABLE l'ID et CREATED_AT SERAS AUTOMATIQUEMENT CRÉÉ /!\\033[0m \n \n";
         echo "\033[1;33m\t \t Quelle nom auras votre table ?\033[0m\n \n";
         $table_name = trim(readline());
 
@@ -85,7 +86,7 @@ class MakeEntity{
             $value = 255;
         }
 
-            array_push($this->value, [$key_value => $value]);
+            array_push($this->value, $value);
             self::GET_NULLABLE();
     }
 
@@ -93,7 +94,7 @@ class MakeEntity{
     {
         echo "\033[1;33m\t \t La collumn ".$this->col_name[$this->count_turn]." peut elle être null ? true/false (false default)\033[0m \n";
         $nullable = trim(readline());
-        if ($nullable == "" || $nullable == " ")
+        if ($nullable == "" || $nullable == " " || $nullable == 'false')
         {
             $nullable = 'false';
         }elseif ($nullable != "true") {
@@ -101,6 +102,25 @@ class MakeEntity{
         }
         array_push($this->nullable, $nullable);
 
+       self::GET_UNIQUE();
+    }
+
+    public function GET_UNIQUE()
+    {
+        echo "\033[1;33m\t \t La collumn ".$this->col_name[$this->count_turn]." doit elle être unique ? true/false (false default)\033[0m \n";
+        $unique = trim(readline());
+        if ($unique == "" || $unique == " " || $unique == 'false')
+        {
+            $unique = 'false';
+        }elseif ($unique != "true") {
+            $unique = 'true';
+        }
+        array_push($this->unique, $unique);
+        self::CONTINUE();
+    }
+
+    public function CONTINUE()
+    {
         echo "\033[31m\t \t Continuer ? yes/no (no default)\033[0m \n";
         $continue = trim(readline());
 
@@ -116,6 +136,35 @@ class MakeEntity{
     protected function CREATE_ENTITY()
     {
         var_dump($this->table_name, $this->col_name, $this->type_name, $this->nullable, $this->value);
+
+        $file = fopen("./src/Entity/$this->table_name".".php", 'w+');
+        fwrite($file, "<?php \n namespace Entity; \n class $this->table_name{ \n\n\t public function GET_SQL(){\n\t \$sql='CREATE TABLE IF NOT EXIST $this->table_name ( ");
+            fwrite($file, "\n\t\t id INT AUTO_INCREMENT PRIMARY KEY");
+            foreach ($this->col_name as $key => $value) {
+                $unique = $this->unique[$key];
+                if ($unique == 'true')
+                {
+                    $unique = 'UNIQUE';
+                }else
+                {
+                    $unique = "";
+                }
+                if ($this->nullable[$key] == 'true')
+                {
+                    $nullable = 'null';
+                }else{
+                    $nullable = '';
+                }
+                if ($this->type_name[$key] == 'string')
+                {
+                    $int = $this->value[0];
+                    fwrite($file, "\n\t\t$value VARCHAR($int) $unique $nullable,");
+                    array_shift($this->value);
+                }else{
+                    fwrite($file,"\n\t\t$value ".strtoupper($this->type_name[$key])." $unique $nullable , " );
+                }
+            }
+            fwrite($file, "\n\t\t created_at INT AUTO_INCREMENT PRIMARY KEY)';\n\t}");
     }
 
 }
