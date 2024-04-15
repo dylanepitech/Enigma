@@ -139,7 +139,7 @@ class MakeEntity{
 
         $file = fopen("./src/Entity/$this->table_name".".php", 'w+');
         fwrite($file, "<?php \n namespace Entity; \n use Model\Database;\n require_once './src/model/Database.php';\n class $this->table_name extends Database{ \n\n\t public function GET_SQL(){\n\t \$sql='CREATE TABLE IF NOT EXISTS $this->table_name ( ");
-            fwrite($file, "\n\t\t id INT AUTO_INCREMENT PRIMARY KEY");
+            fwrite($file, "\n\t\t id INT AUTO_INCREMENT PRIMARY KEY,");
             foreach ($this->col_name as $key => $value) {
                 $unique = $this->unique[$key];
                 if ($unique == 'true')
@@ -151,7 +151,7 @@ class MakeEntity{
                 }
                 if ($this->nullable[$key] == 'true')
                 {
-                    $nullable = 'null';
+                    $nullable = 'NULL';
                 }else{
                     $nullable = '';
                 }
@@ -172,6 +172,8 @@ class MakeEntity{
             fwrite($file, "\$run = new $this->table_name();\n");
             fwrite($file, "\$run->GET_SQL();\n");
             fclose($file);
+            $file ="./src/Entity/$this->table_name".".php";
+            @system("php $file");
     }
 
 }
