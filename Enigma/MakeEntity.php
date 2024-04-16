@@ -135,8 +135,6 @@ class MakeEntity{
 
     protected function CREATE_ENTITY()
     {
-        var_dump($this->table_name, $this->col_name, $this->type_name, $this->nullable, $this->value);
-
         $file = fopen("./src/Entity/$this->table_name".".php", 'w+');
         fwrite($file, "<?php \n namespace Entity; \n use Model\Database;\n use PDO;\n require_once './src/model/Database.php';\n class $this->table_name extends Database{ \n\n\t public function GET_SQL(){\n\t \$sql='CREATE TABLE IF NOT EXISTS $this->table_name ( ");
             fwrite($file, "\n\t\t id INT AUTO_INCREMENT PRIMARY KEY,");
@@ -246,7 +244,55 @@ class MakeEntity{
             fclose($file);
             $file ="./src/Entity/$this->table_name".".php";
             @system("php $file");
+                    self::MAKE_FORM();
     }
+
+    public function MAKE_FORM()
+{
+    $file = fopen("./src/Form/{$this->table_name}form.php", 'w+');
+fwrite($file, "<?php\nnamespace Form;\n");
+fwrite($file, "use Entity\\{$this->table_name};\n"); // Correction de l'utilisation de l'espace de noms
+
+fwrite($file, "class {$this->table_name}form{\n");
+
+fwrite($file, "\tpublic function start(\$action, \$method){\n");
+fwrite($file, "\t\techo \"<form action='\$action' method='\$method'>\";\n");
+fwrite($file, "\t}\n");
+
+foreach ($this->col_name as $key => $value) {
+    fwrite($file, "\n\tpublic function $value(){\n");
+    if ($this->type_name[$key] == 'string' || $this->type_name[$key] == 'text') {
+        fwrite($file, "\t\techo \"<input type='text' name='$value' id='$value'>\";\n");
+    } elseif ($this->type_name[$key] == 'int') {
+        fwrite($file, "\t\techo \"<input type='number' name='$value' id='$value'>\";\n"); 
+    } elseif ($this->type_name[$key] == 'date') {
+        fwrite($file, "\t\techo \"<input type='date' name='$value' id='$value'>\";\n");
+    }
+    fwrite($file, "\t}\n");
+}
+
+fwrite($file, "\n\tpublic function end(){\n");
+fwrite($file, "\t\techo \"<button type='submit'>Envoyer</button>\";\n"); 
+fwrite($file, "\t\techo \"</form>\";\n");
+fwrite($file, "\t}\n");
+
+$col_name = "";
+fwrite($file, "\n\tpublic function collect(){\n");
+foreach ($this->col_name as $value) {
+    $col_name .= "$$value, ";
+    fwrite($file, "\t\t\$$value = \$_POST['$value'];\n");
+}
+    $col_name = rtrim($col_name, ", ");
+    fwrite($file,"\t\t$$this->table_name = new $this->table_name();\n");
+    fwrite($file,"\t\t$$this->table_name->SET_ROW($col_name);\n");
+
+fwrite($file, "\t\t}\n");
+fwrite($file, "}\n");
+
+fclose($file);
+
+}
+
 
 }
 

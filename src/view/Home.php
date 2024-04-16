@@ -9,10 +9,15 @@
 
 <body>
     <h1>Sa marche</h1>
-    <form action="home" method="POST">
-        <input type="text" name="test">
-        <button>Envoyer</button>
-    </form>
+    <?php
+    use Form\userform;
+    $form = new userform();
+    $form->start('','POST');
+    $form->firstname();
+    $form->lastname();
+    $form->age();
+    $form->end();
+            ?>
 </body>
 
 </html>

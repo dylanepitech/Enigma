@@ -8,7 +8,8 @@
             "View\\": ["./src/view/", "./src/model/"],
             "Controller\\": "./src/controller/",
             "Routes\\": "./Routes/",
-            "Entity\\": "./src/Entity/"
+            "Entity\\": "./src/Entity/",
+            "Form\\": "./src/Form/"
         }
     },
     "authors": [

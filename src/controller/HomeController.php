@@ -1,5 +1,6 @@
 <?php 
 namespace Controller;
+use Form\userform;
 
 
 class HomeController{
@@ -7,9 +8,11 @@ class HomeController{
     public function view()
     {
         require_once('src/view/Home.php');
+
     }
     public function post()
     {
-        var_dump($_POST);
+    $form = new userform();
+    $form->collect();   
     }
 }
