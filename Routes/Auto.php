@@ -44,7 +44,13 @@ class Auto{
                 $controller_file = "src/controller/$controller_name";
                 require_once $controller_file;
                 $new_controller =  new $controller_name_namespace();
-                $new_controller->view();
+                if ($_SERVER['REQUEST_METHOD'] == 'GET')
+                {
+                    $new_controller->view();
+                }else{
+                    $new_controller->post();
+
+                }
             }else{
                 $error = 'La route ne corrrespond à aucune connue..';
                 require_once('./src/view/404.php');

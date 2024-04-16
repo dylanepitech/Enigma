@@ -9,11 +9,10 @@
 
 <body>
     <h1>Sa marche</h1>
-    <?php
-    foreach ($abs as $key => $value) {
-        echo $value;
-    } 
-    ?>
+    <form action="home" method="POST">
+        <input type="text" name="test">
+        <button>Envoyer</button>
+    </form>
 </body>
 
 </html>
