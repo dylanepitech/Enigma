@@ -1,5 +1,8 @@
 <?php 
 namespace Controller;
+use Entity\user;
+
+
 class HomeController{
 
     public function view()

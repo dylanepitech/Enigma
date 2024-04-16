@@ -6,8 +6,6 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Dotenv\Dotenv as Dotenv;
 use PDO;
-use PDOException;
-use Exception;
 
  abstract class Database
 {
@@ -28,48 +26,18 @@ use Exception;
         $this->username = $_ENV['DB_USERNAME'];
         $this->password = $_ENV['DB_PASSWORD'];
         $this->port = $_ENV['DB_PORT'];
-        $this->testConnection();
-    }
 
-    protected function testConnection()
-    {
+        $dsn = "mysql:host=$this->host;port=$this->port;dbname=$this->dbname";
+        
         try {
-            $this->conn = new PDO(
-                'mysql:host=' . $this->host . ';port=' . $this->port,
-                $this->username,
-                $this->password
-            );
+            $this->conn = new PDO($dsn, $this->username, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            echo "Information de la base de données correcte.\n";
-            $this->createDatabase();
-        } catch (PDOException $e) {
-            var_dump($e);
+        } catch (\Throwable $th) {
+           echo "$th";
         }
+       
     }
 
-    protected function createDatabase()
-    {
-        try {
-            $sql = "CREATE DATABASE IF NOT EXISTS Enigma";
-            $this->conn->exec($sql);
-            echo 'Base de données Enigma charger.\n';
-            $this->connect();
-        } catch (PDOException $e) {
-            var_dump('Erreur de connexion à la base de données : ' . $e->getMessage());
-        }
-    }
+   abstract public function GET_CONNECTION();
 
-    protected function connect()
-    {
-        try {
-            $this->conn = new PDO(
-                'mysql:host=' . $this->host . ';dbname=' . $this->dbname . ';port=' . $this->port,
-                $this->username,
-                $this->password
-            );
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            throw new Exception("Erreur de connexion à la base de données: " . $e->getMessage());
-        }
-    }
 }

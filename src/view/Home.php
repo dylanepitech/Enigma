@@ -9,6 +9,11 @@
 
 <body>
     <h1>Sa marche</h1>
+    <?php
+    foreach ($abs as $key => $value) {
+        echo $value;
+    } 
+    ?>
 </body>
 
 </html>

@@ -138,7 +138,7 @@ class MakeEntity{
         var_dump($this->table_name, $this->col_name, $this->type_name, $this->nullable, $this->value);
 
         $file = fopen("./src/Entity/$this->table_name".".php", 'w+');
-        fwrite($file, "<?php \n namespace Entity; \n use Model\Database;\n require_once './src/model/Database.php';\n class $this->table_name extends Database{ \n\n\t public function GET_SQL(){\n\t \$sql='CREATE TABLE IF NOT EXISTS $this->table_name ( ");
+        fwrite($file, "<?php \n namespace Entity; \n use Model\Database;\n use PDO;\n require_once './src/model/Database.php';\n class $this->table_name extends Database{ \n\n\t public function GET_SQL(){\n\t \$sql='CREATE TABLE IF NOT EXISTS $this->table_name ( ");
             fwrite($file, "\n\t\t id INT AUTO_INCREMENT PRIMARY KEY,");
             foreach ($this->col_name as $key => $value) {
                 $unique = $this->unique[$key];
@@ -166,8 +166,80 @@ class MakeEntity{
             }
             fwrite($file, "\n\t\t created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)';");
             fwrite($file, "\n\t \$statement = \$this->conn->prepare(\$sql);");
-            fwrite($file, "\$statement->execute();");
+            fwrite($file, "\n\$statement->execute();");
             fwrite($file, "\n\t}");
+            fwrite($file, "\n\tpublic function GET_CONNECTION(){\n");
+            fwrite($file, "\t return \$this->conn;\n");
+            fwrite($file,"}\n");
+            foreach ($this->col_name as $key=> $value) {
+                
+                fwrite($file, "\t\tpublic function GET_ALL_".strtoupper($value)."(){\n");
+                fwrite($file,"\t \$sql='SELECT $value from $this->table_name';\n");
+                fwrite($file,"\t\$statement = self::GET_CONNECTION()->prepare(\$sql);\n");
+                fwrite($file,"\t\$statement->execute();\n");
+                fwrite($file,"\t\$result = \$statement->fetchAll(PDO::FETCH_ASSOC);\n");
+                fwrite($file,"\treturn \$result;\n}\n");
+
+                    fwrite($file, "\t\tpublic function GET_".strtoupper($value)."(\$id){\n");
+                    fwrite($file,"\t \$sql=\"SELECT $value from $this->table_name where id like \$id\";\n");
+                    fwrite($file,"\t\$statement = self::GET_CONNECTION()->prepare(\$sql);\n");
+                    fwrite($file,"\t\$statement->execute();\n");
+                    fwrite($file,"\t\$result = \$statement->fetch(PDO::FETCH_ASSOC);\n");
+                    fwrite($file,"\treturn \$result;\n}\n");
+
+                    fwrite($file, "\t\tpublic function SET_".strtoupper($value)."(\$id, \$valeur){\n");
+                        if ($this->type_name[$key] == 'int')
+                        {
+                            fwrite($file,"\t \$sql=\"UPDATE $this->table_name SET $value = \$valeur  where id like \$id\";\n");
+                        }else{
+                            fwrite($file,"\t \$sql=\"UPDATE $this->table_name SET $value = '\$valeur'  where id like \$id\";\n");
+                        }
+                        fwrite($file,"\t\$statement = self::GET_CONNECTION()->prepare(\$sql);\n");
+                        fwrite($file,"\t\$statement->execute();\n");
+                        fwrite($file,"\t}\n");
+            }
+
+            fwrite($file, "\n\tpublic function GET_ROW(\$id_row){\n\t");
+            fwrite($file, "\$sql = \"SELECT * FROM $this->table_name WHERE id = \$id_row\";");
+            fwrite($file, "\n\t\$statement = self::GET_CONNECTION()->prepare(\$sql);\n\t");
+            fwrite($file, "\$statement->execute();\n\t");
+            fwrite($file, "\$result =\$statement->fetch(PDO::FETCH_ASSOC);\n\t");
+            fwrite($file, "return \$result;\n\t");
+            fwrite($file, "\n}\n");
+
+                fwrite($file, "\n\tpublic function GET_ALL(){\n\t");
+                fwrite($file, "\$sql = \"SELECT * FROM $this->table_name\";");
+                fwrite($file, "\n\t\$statement = self::GET_CONNECTION()->prepare(\$sql);\n\t");
+                fwrite($file, "\$statement->execute();\n\t");
+                fwrite($file, "\$result =\$statement->fetchAll(PDO::FETCH_ASSOC);\n\t");
+                fwrite($file, "return \$result;\n\t");
+                fwrite($file, "\n}\n");
+                $col = "";
+                $col_name = "";
+                $col_bind ="";
+                foreach ($this->col_name as $value) {
+                    $col .= "$"."$value, ";
+                    $col_name .= "$value, ";
+                    $col_bind .= ":$value, ";
+                }
+                
+                $col = rtrim($col, ", ");
+                $col_name = rtrim($col_name, ", ");
+                $col_bind = rtrim($col_bind, ":");
+                $col_bind = rtrim($col_bind, ", ");
+                
+                fwrite($file, "public function SET_ROW($col)\n\t");
+                fwrite($file, "{\n\t\t");
+                fwrite($file, "\$sql = \"INSERT INTO $this->table_name ($col_name) VALUES ($col_bind)\";");
+                fwrite($file, "\n\t\$statement = self::GET_CONNECTION()->prepare(\$sql);\n\t");
+
+                    foreach ($this->col_name as $value) {
+                        fwrite($file,"\$statement->bindParam(':$value', $$value);\n\t" );
+                    }
+
+                fwrite($file, "\$statement->execute();\n\t");
+                fwrite($file, "\n}\n");
+                
             fwrite($file, "\n}\n");
             fwrite($file, "\$run = new $this->table_name();\n");
             fwrite($file, "\$run->GET_SQL();\n");

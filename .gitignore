@@ -1,3 +1,4 @@
 roadmap.txt
 .env
 /vendor/
+src/Entity/*
