@@ -10,13 +10,14 @@
 <body>
     <h1>Sa marche</h1>
     <?php
-    use Form\userform;
-    $form = new userform();
-    $form->start('','POST');
-    $form->firstname();
-    $form->lastname();
-    $form->age();
-    $form->end();
+    use Form\user_tableform;
+    $user = new user_tableform();
+    $user->start("","POST");
+    $user->firstname();
+    $user->lastname();
+    $user->age();
+    $user->birthdate();
+    $user->end();
             ?>
 </body>
 

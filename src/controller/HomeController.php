@@ -1,6 +1,6 @@
 <?php 
 namespace Controller;
-use Form\userform;
+use Form\user_tableform;
 
 
 class HomeController{
@@ -12,7 +12,7 @@ class HomeController{
     }
     public function post()
     {
-    $form = new userform();
-    $form->collect();   
+        $user = new user_tableform();
+        $user->collect();
     }
 }
