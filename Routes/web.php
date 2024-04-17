@@ -3,7 +3,7 @@ namespace Routes;
 use Routes\index;
 // require_once __DIR__ . '/../vendor/autoload.php';
 $invok = new index();
-$invok->Route('/','HomeController@view', 'GET');
-$invok->Route('/','HomeController@post', 'POST');
+$invok->Route('/home','HomeController@view', 'GET');
+$invok->Route('/home/{id}','HomeController@getuser', 'GET');
 
 index::SELECT_ROUTE($invok);

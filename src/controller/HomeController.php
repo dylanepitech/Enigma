@@ -1,6 +1,5 @@
 <?php 
 namespace Controller;
-use Form\user_tableform;
 
 
 class HomeController{
@@ -10,9 +9,9 @@ class HomeController{
         require_once('src/view/Home.php');
 
     }
-    public function post()
+    public function getuser($id)
     {
-        $user = new user_tableform();
-        $user->collect();
+        echo $id;
+
     }
 }
