@@ -1,38 +1,51 @@
-# Enigma
+## Routeur statique et dynamique
 
-## Description
+Le routeur peut être statique ou dynamique celon votre usage, pour cela dans le '.env' completer la variable [ROUTER_AUTO] par true ou false.
 
-Enigma est un framework PHP conçu pour la création rapide et simple de sites web et d'applications web. Basé sur PHP 8.3, ce framework offre des fonctionnalités pour la gestion des routes, de la base de données ainsi que la génération simple et rapide de modèles et de contrôleurs.
+### Routeur Dynamique ou Automatique:
 
-## Fonctionnalités
+Dans le cas de true le routeur récupéreras automatiquement l'url courrante et apelleras le controller associer a la route.
 
-- Gestion simplifiée des routes pour faciliter la navigation au sein de l'application.
-- Interface conviviale pour interagir avec la base de données, permettant d'exécuter des requêtes SQL de manière intuitive.
-- Génération automatique de modèles et de contrôleurs pour accélérer le processus de développement.
-- Support de PHP 8.3 et des dernières fonctionnalités du langage pour une meilleure performance et sécurité.
+exemple : "http://enigma.fr" l'url appeleras le fichier [src/controller/Homecontroller.php] ou [src/controller/Indexcontroller.php] celon si votre fichier de référence est index ou home dans le fichier .env [DEFAULT] 'home' ou 'index'.
 
-## Installation
+Par default dans le routeur dynamique l'url de la Homepage seras:
+/ && /home pour [DEFAULT=home] || / && /index pour [DEFAULT=index].
 
-1. Clonez ce dépôt : `git clone https://github.com/dylanepitech/Enigma.git`
-2. Assurez-vous d'avoir PHP 8.3 installé sur votre système.
-3. Configurez votre serveur web pour qu'il pointe vers le répertoire public de votre projet.
-4. Modifiez le fichier de configuration pour adapter les paramètres de connexion à votre base de données.
+### Routeur statique ou déclaratif:
 
-## Utilisation
+Dans le cas de false vous devrais déclarer les route dans le fichier [Routes/web.php].
 
-1. Définissez vos routes dans le fichier `routes.php`.
-2. Utilisez les commandes de génération pour créer des modèles et des contrôleurs automatiquement.
-3. Utilisez les méthodes disponibles dans le framework pour interagir avec la base de données et rendre vos vues.
-4. [Guide des Commandes](commande.sh).
+[PATH] = /url
+[CONTROLER@function] = nomducontroller@nomdelafunction
+[Mehod] = POST,GET,PUT,PATCH,DELETE
 
-## Contribution
+exemple:
+$invok->Route('/','HomeController@view', 'GET');
 
-Les contributions à l'amélioration de ce framework sont les bienvenues ! Si vous souhaitez contribuer, veuillez ouvrir une issue pour discuter des changements que vous souhaitez apporter.
+l'url courante seras [/] le controller apeller seras [HomeController] et la function apeller seras [view].
 
-## Auteurs
+## Database
 
-Ce framework a été créé par DylanEpitech.
+1. Pour initialiser la base de donner commencer part remplire les champs demander dans le .env [DB_HOST],[DB_NAME],[DB_USERNAME], [DB_PASSWORD],[DB_PORT].
 
-## Statut du Projet
+2. Executer la commande [php src/model/Database.php].
 
-Ce framework est encore en développement. Les fonctionnalités de base sont opérationnelles, mais des améliorations et des fonctionnalités supplémentaires sont en cours d'ajout.
+3)Executer la commande [php src/model/Method.php] pour créer la table Enigma.
+
+4)Executer la commande [php Enigma/MakeEntity.php] pour commencer a créé une entité.
+
+## Entity
+
+Pour créé une entité la commande [php Enigma/MakeEntity.php] créé un questionnaire question reponse dans le terminal qui définira:
+-Nom de la table,
+-Le nom de la collone,
+-le type de la collone,
+-la valeur (si string) de la collone,
+-Si la col peut être null,
+-Si la col peut etre unique,
+
+Une fois fini cela généreras un fichier du nom de la table dans [src/Entity/], dans ce fichier il y auras tout les setter et getter lier a cette table et des methods magique pour itéragir a la base de donnée.
+
+Dans le controller l'instanciation de classe permettras de récupérer les setter et guetter de la base l'entity et donc pouvoir géré beaucoup de cas sans avoir a faire de sql dans le controller directement.
+
+elle généreras aussi un formulaire qui auras le nom de la table+fom.
