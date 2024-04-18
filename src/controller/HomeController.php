@@ -1,5 +1,6 @@
 <?php 
 namespace Controller;
+use Entity\user;
 
 
 class HomeController{
@@ -11,7 +12,6 @@ class HomeController{
     }
     public function getuser($id)
     {
-        echo $id;
-
+        require_once('src/view/Home.php');
     }
 }

@@ -40,7 +40,7 @@ use Dotenv\Dotenv;
                                   require_once $controllerFile;
                                   if (class_exists($controllerName)) {
                                       $controller = new $controllerName();
-                                      $controller->$action($second_part);
+                                      $controller->$action(ltrim($second_part, "/"));
                                   } else {
                                       $error = 'La méthode appelée dans le contrôleur ne correspond pas.';
                                       require_once('./src/view/404.php');
